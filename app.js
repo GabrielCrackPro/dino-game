@@ -1,6 +1,6 @@
-const cloudsElement = document.querySelector('.clouds');
-const roadElement = document.querySelector('.road');
-const scoreElement = document.querySelector('.score-value');
+const cloudsElement = document.querySelector(".clouds");
+const roadElement = document.querySelector(".road");
+const scoreElement = document.querySelector(".score-value");
 
 function getRandomNumber(min, max) {
   return min + Math.floor(Math.random() * (max - min));
@@ -20,7 +20,7 @@ const world = {
       location: {
         y: -40,
       },
-      element: document.querySelector('.dino'),
+      element: document.querySelector(".dino"),
     },
   },
 };
@@ -29,9 +29,9 @@ function init() {
   let currentCloud = 1;
   const maxClouds = 4;
   for (let i = 0; i < 20; i += 1) {
-    const cloudImage = document.createElement('img');
+    const cloudImage = document.createElement("img");
     cloudImage.src = `cloud-${currentCloud}.png`;
-    cloudImage.classList.add('cloud');
+    cloudImage.classList.add("cloud");
     const cloud = {
       element: cloudImage,
       velocity: getRandomNumber(1, 3),
@@ -43,9 +43,9 @@ function init() {
     };
     cloudImage.style.transform = `scale(${cloud.scale})`;
     world.objects.clouds.push(cloud);
-    cloudImage.style.opacity = cloud.location.y + '%';
-    cloudImage.style.top = cloud.location.y + '%';
-    cloudImage.style.left = cloud.location.x + '%';
+    cloudImage.style.opacity = cloud.location.y + "%";
+    cloudImage.style.top = cloud.location.y + "%";
+    cloudImage.style.left = cloud.location.x + "%";
     cloudsElement.append(cloudImage);
     currentCloud += 1;
     if (currentCloud > maxClouds) {
@@ -53,36 +53,36 @@ function init() {
     }
   }
   for (let i = 0; i < 4; i += 1) {
-    const roadLineElement = document.createElement('div');
-    roadLineElement.classList.add('road-line');
+    const roadLineElement = document.createElement("div");
+    roadLineElement.classList.add("road-line");
     const roadLine = {
       element: roadLineElement,
       velocity: 1.5,
       location: {
         y: 40,
-        x: (i * 20) + (20 * i),
+        x: i * 20 + 20 * i,
       },
     };
     world.objects.roadLines.push(roadLine);
-    roadLine.element.style.top = roadLine.location.y + '%';
-    roadLine.element.style.left = roadLine.location.x + '%';
+    roadLine.element.style.top = roadLine.location.y + "%";
+    roadLine.element.style.left = roadLine.location.x + "%";
     roadElement.append(roadLineElement);
   }
   for (let i = 0; i < 5; i++) {
-    const foodImage = document.createElement('img');
-    foodImage.classList.add('food');
-    foodImage.src = Math.random() > 0.5 ? 'waffle.png' : 'cheesecake.png';
-    foodImage.style.position = 'absolute';
+    const foodImage = document.createElement("img");
+    foodImage.classList.add("food");
+    foodImage.src = Math.random() > 0.5 ? "waffle.png" : "cheesecake.png";
+    foodImage.style.position = "absolute";
     const food = {
       element: foodImage,
       velocity: 1.5,
       location: {
         y: 5,
-        x: 100 + (i * 100) + getRandomNumber(0, 50),
+        x: 100 + i * 100 + getRandomNumber(0, 50),
       },
     };
-    food.element.style.top = food.location.y + '%';
-    food.element.style.left = food.location.x + '%';
+    food.element.style.top = food.location.y + "%";
+    food.element.style.left = food.location.x + "%";
     roadElement.append(foodImage);
     world.objects.foods.push(food);
   }
@@ -92,28 +92,34 @@ function init() {
 
 function draw() {
   world.objects.clouds.forEach((cloud) => {
-    cloud.element.style.opacity = cloud.location.y + '%';
-    cloud.element.style.left = cloud.location.x + '%';
+    cloud.element.style.opacity = cloud.location.y + "%";
+    cloud.element.style.left = cloud.location.x + "%";
     cloud.element.style.transform = `scale(${cloud.scale})`;
   });
   world.objects.roadLines.forEach((roadLine) => {
-    roadLine.element.style.left = roadLine.location.x + '%';
+    roadLine.element.style.left = roadLine.location.x + "%";
   });
   world.objects.foods.forEach((food) => {
-    food.element.style.left = food.location.x + '%';
+    food.element.style.left = food.location.x + "%";
   });
-  if (world.objects.dino.isJumping && !world.objects.dino.element.src.endsWith('dino/jump.gif')) {
-    world.objects.dino.element.src = 'dino/jump.gif';
-  } else if (!world.objects.dino.isJumping && !world.objects.dino.element.src.endsWith('dino/walk.gif')) {
-    world.objects.dino.element.src = 'dino/walk.gif';
+  if (
+    world.objects.dino.isJumping &&
+    !world.objects.dino.element.src.endsWith("dino/jump.gif")
+  ) {
+    world.objects.dino.element.src = "dino/jump.gif";
+  } else if (
+    !world.objects.dino.isJumping &&
+    !world.objects.dino.element.src.endsWith("dino/walk.gif")
+  ) {
+    world.objects.dino.element.src = "dino/walk.gif";
   }
-  world.objects.dino.element.style.top = world.objects.dino.location.y + '%';
+  world.objects.dino.element.style.top = world.objects.dino.location.y + "%";
 
   if (!world.gameOver) {
     setTimeout(update, world.updateMs);
   } else {
-    world.objects.dino.element.src = 'dino/jump.gif';
-    world.objects.dino.element.style.transform = 'rotate(-90deg)';
+    world.objects.dino.element.src = "dino/die.gif";
+    setTimeout(() => location.reload(), 2000);
   }
 
   scoreElement.textContent = world.score;
@@ -125,7 +131,7 @@ function update() {
   const roadRect = roadElement.getBoundingClientRect();
   world.objects.clouds.forEach((cloud) => {
     const cloudRect = cloud.element.getBoundingClientRect();
-    if ((cloudRect.left + cloudRect.width) - 20 <= cloudsRect.left) {
+    if (cloudRect.left + cloudRect.width - 20 <= cloudsRect.left) {
       cloud.location.x = getRandomNumber(100, 120);
       cloud.location.y = getRandomNumber(-20, 60);
       cloud.scale = getRandomNumber(0.7, 1.4);
@@ -135,7 +141,7 @@ function update() {
   });
   world.objects.roadLines.forEach((roadLine) => {
     const roadLineRect = roadLine.element.getBoundingClientRect();
-    if ((roadLineRect.left + roadLineRect.width) - 10 <= roadRect.left) {
+    if (roadLineRect.left + roadLineRect.width - 10 <= roadRect.left) {
       roadLine.location.x = 100;
     } else {
       roadLine.location.x -= roadLine.velocity;
@@ -143,13 +149,17 @@ function update() {
   });
   world.objects.foods.forEach((food, i) => {
     const foodRect = food.element.getBoundingClientRect();
-    if (foodRect.left <= dinoRect.right - 80
-      && dinoRect.bottom - 80 > foodRect.top
-      && foodRect.left >= dinoRect.left + 20) {
+    if (
+      foodRect.left <= dinoRect.right - 80 &&
+      dinoRect.bottom - 80 > foodRect.top &&
+      foodRect.left >= dinoRect.left + 20
+    ) {
       world.gameOver = true;
     }
-    if ((foodRect.left + foodRect.width) <= roadRect.left) {
-      const farthestFoodX = Math.max(...world.objects.foods.map((food) => food.location.x));
+    if (foodRect.left + foodRect.width <= roadRect.left) {
+      const farthestFoodX = Math.max(
+        ...world.objects.foods.map((food) => food.location.x)
+      );
       food.location.x = farthestFoodX + 100 + getRandomNumber(0, 50);
       world.score += 1;
     } else {
@@ -176,12 +186,17 @@ function update() {
 
 init();
 
-document.addEventListener('keydown', (event) => {
-  if (event.code === 'ArrowUp') {
+document.addEventListener("keydown", (event) => {
+  if (event.code === "ArrowUp") {
+    world.objects.dino.isJumping = true;
+  }
+});
+document.addEventListener("keydown", (event) => {
+  if (event.code === "Space") {
     world.objects.dino.isJumping = true;
   }
 });
 
-document.addEventListener('click', () => {
+document.addEventListener("click", () => {
   world.objects.dino.isJumping = true;
 });
